@@ -1,0 +1,16 @@
+PREFIX wd: <http://www.wikidata.org/entity/> 
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <https://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+
+
+SELECT ?birthYear (COUNT(?human) AS ?count) WHERE {
+  ?human wdt:P31 wd:Q5.               # Instance of human
+  FILTER NOT EXISTS {
+    ?human wdt:P31 wd:Q95074.         # Exclude fictional characters
+  }
+  ?human wdt:P569 ?birthDate.         # Date of birth
+  BIND(YEAR(?birthDate) AS ?birthYear)
+}
+GROUP BY ?birthYear
+ORDER BY ?birthYear
